@@ -97,4 +97,11 @@ Utilizado pelo time de desenvolvimento do .NET Core e ASP.NET
 #### Instalação do framework:
     - Install-Package Moq
 
+### Cobertura de código no Visual Studio
+    Open Cover
+    
+### TDD - Test Driven Development (Red, Green, Refactor)
 
+    1 - Escreva um teste e assista ele falhar.
+    2 - Escreva o mínimo de código para passar no teste.
+    3 - Refatore, melhore e teste novamente.

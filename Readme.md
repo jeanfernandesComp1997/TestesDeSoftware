@@ -105,3 +105,51 @@ Utilizado pelo time de desenvolvimento do .NET Core e ASP.NET
     1 - Escreva um teste e assista ele falhar.
     2 - Escreva o mínimo de código para passar no teste.
     3 - Refatore, melhore e teste novamente.
+
+
+Porque testar antes de escrever o código?
+
+    - Os bugs serão encontrados muito mais rapidamente;
+    - Os bugs serão corrigidos rapidamente;
+    - O código ficará mais blindado para falhas;
+    
+As três leis dos TDD
+    
+    1- Você não pode escrever nenhum código até ter escrito um teste que detecte uma possível falha.
+    2- Você não pode escrever mais testes de unidade do que o suficiente para detectar a falha - não compilar é não ter efeito.
+    3- Você não pode escrever mais código do que o suficiente para passar nos testes.
+
+TDD Ciclo de vida -> Teste Fails -> Test Passes -> Refactor
+
+
+#### Baby Steps
+
+Indicado para iniciantes em TDD.
+Utilizado quando não se tem muita confiança sobre o código a ser escrito e testado.
+Fazer um processo por vez.
+
+Fazer um teste -> Escrever código -> Fazer mais um código -> Escrever código -> Testar -> Refatorar? -> Finalizar
+
+Dicas para começar:
+    Praticar os baby steps e respeitar as 3 leis do TDD.
+    Saiba exatamente o que precisa entregar antes de começar.
+    Não deixe para descobrir a regra de negócio durante a codificação.
+    Tenha uma lista de anotações ou uma documentação clara sempre a mão.
+    Minta, no green o teste só precisa passar, depois utilize Mocks.
+    Testes simples.
+    Analisar reaproveitamento de objetos.
+    *Saiba quando usar TDD, nem sempre é vantajoso*
+
+
+Teste Driven Design?
+
+    Não é sobre escrever testes, mas sim ajudar a escrever um bom código.
+    Escrever testes depois do código também é bom, mas pode ocasionar retrabalho caso precise de modificações.
+
+    Você -> testa um código -> Dirigido pelo seu objetivo -> De escrever com o melhor Design possível
+
+Leituras indicadas
+    Teste-Driven-Development (Casa do código)
+    Test-Driven-Development (Kent Beck)
+    Growing Object-Oriented Software, Guided by Tests (Steve Freeman)
+    Practical Test-Driven Development using C# 7

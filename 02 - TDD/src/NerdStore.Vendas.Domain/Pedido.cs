@@ -1,4 +1,5 @@
-﻿using NerdStore.Core.DomainObjects;
+﻿using FluentValidation.Results;
+using NerdStore.Core.DomainObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,12 @@ namespace NerdStore.Vendas.Domain
         public static int MIN_UNIDADES_ITEM => 1;
         public decimal ValorTotal { get; private set; }
         public PedidoStatus PedidoStatus { get; private set; }
+        public bool VoucherUtilizado { get; private set; }
+        public Voucher Voucher { get; private set; }
         private readonly List<PedidoItem> _pedidoItems;
         public IReadOnlyCollection<PedidoItem> PedidoItems => _pedidoItems;
         public Guid ClientId { get; set; }
+        public decimal Desconto { get; private set; }
 
         protected Pedido()
         {
@@ -84,9 +88,51 @@ namespace NerdStore.Vendas.Domain
             CalcularValorPedido();
         }
 
+        public void RemoverItem(PedidoItem pedidoItem)
+        {
+            ValidarPedidoItemInexistente(pedidoItem);
+
+            _pedidoItems.Remove(pedidoItem);
+
+            CalcularValorPedido();
+        }
+
         public void TornarRascunho()
         {
             PedidoStatus = PedidoStatus.Rascunho;
+        }
+
+        public ValidationResult AplicarVoucher(Voucher voucher)
+        {
+            var result = voucher.ValidarSeAplicavel();
+
+            if (!result.IsValid) return result;
+
+            Voucher = voucher;
+            VoucherUtilizado = true;
+
+            CalcularValorTotalDesconto();
+
+            return result;
+        }
+
+        public void CalcularValorTotalDesconto()
+        {
+            if (!VoucherUtilizado) return;
+
+            decimal desconto = 0;
+
+            if (Voucher.TipoDescontoVoucher == TipoDescontoVoucher.Valor)
+            {
+                desconto = Voucher.ValorDesconto.Value;
+            }
+            else
+            {
+                desconto = (ValorTotal * Voucher.PercentualDesconto.Value) / 100;
+            }
+
+            ValorTotal -= desconto;
+            Desconto = desconto;
         }
 
         public static class PedidoFactory

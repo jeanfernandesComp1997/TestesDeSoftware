@@ -27,6 +27,7 @@ namespace NerdStore.Vendas.Domain
         private void CalcularValorPedido()
         {
             ValorTotal = PedidoItems.Sum(i => i.CalcularValor());
+            CalcularValorTotalDesconto();
         }
 
         private bool PedidoItemExistente(PedidoItem item)
@@ -121,17 +122,20 @@ namespace NerdStore.Vendas.Domain
             if (!VoucherUtilizado) return;
 
             decimal desconto = 0;
+            var valor = ValorTotal;
 
             if (Voucher.TipoDescontoVoucher == TipoDescontoVoucher.Valor)
             {
                 desconto = Voucher.ValorDesconto.Value;
+                valor -= desconto;
             }
             else
             {
                 desconto = (ValorTotal * Voucher.PercentualDesconto.Value) / 100;
+                valor -= desconto;
             }
 
-            ValorTotal -= desconto;
+            ValorTotal = valor < 0 ? 0 : valor;
             Desconto = desconto;
         }
 
@@ -149,42 +153,5 @@ namespace NerdStore.Vendas.Domain
                 return pedido;
             }
         }
-    }
-
-    public class PedidoItem
-    {
-        public Guid ProdutoId { get; private set; }
-        public string ProdutoNome { get; private set; }
-        public int Quantidade { get; private set; }
-        public decimal ValorUnitario { get; private set; }
-
-        public PedidoItem(Guid produtoId, string produtoNome, int quantidade, decimal valorUnitario)
-        {
-            if (quantidade < Pedido.MIN_UNIDADES_ITEM) throw new DomainException($"Mínimo de {Pedido.MIN_UNIDADES_ITEM} unidades por produto");
-
-            ProdutoId = produtoId;
-            ProdutoNome = produtoNome;
-            Quantidade = quantidade;
-            ValorUnitario = valorUnitario;
-        }
-
-        internal void AdicionarUnidades(int unidades)
-        {
-            Quantidade += unidades;
-        }
-
-        internal decimal CalcularValor()
-        {
-            return Quantidade * ValorUnitario;
-        }
-    }
-
-    public enum PedidoStatus
-    {
-        Rascunho = 0,
-        Iniciado = 1,
-        Pago = 4,
-        Entregue = 5,
-        Cancelado = 6
     }
 }

@@ -1,6 +1,9 @@
 ﻿using MediatR;
+using NerdStore.Core.DomainObjects;
+using NerdStore.Core.Messages;
 using NerdStore.Vendas.Application.Events;
 using NerdStore.Vendas.Domain;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +22,8 @@ namespace NerdStore.Vendas.Application.Commands
 
         public async Task<bool> Handle(AdicionarItemPedidoCommand message, CancellationToken cancellationToken)
         {
+            if (!await ValidarComando(message, cancellationToken)) return false;
+
             var pedido = await _pedidoRepository.ObterPedidoRascunhoPorClientId(message.ClientId);
             var pedidoItem = new PedidoItem(message.ProdutoId, message.Nome, message.Quantidade, message.ValorUnitario);
 
@@ -30,8 +35,18 @@ namespace NerdStore.Vendas.Application.Commands
             }
             else
             {
+                var pedidoItemExistente = pedido.PedidoItemExistente(pedidoItem);
                 pedido.AdicionarItem(pedidoItem);
-                _pedidoRepository.AdicionarItem(pedidoItem);
+
+                if (pedidoItemExistente)
+                {
+                    _pedidoRepository.AtualizarItem(pedido.PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId));
+                }
+                else
+                {
+                    _pedidoRepository.AdicionarItem(pedidoItem);
+                }
+
                 _pedidoRepository.Atualizar(pedido);
             }
 
@@ -39,6 +54,18 @@ namespace NerdStore.Vendas.Application.Commands
                 message.Nome, message.ValorUnitario, message.Quantidade));
 
             return await _pedidoRepository.UnitOfWork.Commit();
+        }
+
+        private async Task<bool> ValidarComando(Command message, CancellationToken cancellationToken)
+        {
+            if (message.EhValido()) return true;
+
+            foreach (var error in message.ValidationResult.Errors)
+            {
+                await _mediator.Publish(new DomainNotificarion(message.MessageType, error.ErrorMessage), cancellationToken);
+            }
+
+            return false;
         }
     }
 }

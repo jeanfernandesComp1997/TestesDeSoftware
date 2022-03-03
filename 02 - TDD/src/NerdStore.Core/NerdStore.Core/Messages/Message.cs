@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediatR;
+using System;
 
 namespace NerdStore.Core.Messages
 {
@@ -10,6 +11,16 @@ namespace NerdStore.Core.Messages
         public Message()
         {
             MessageType = GetType().Name;
+        }
+    }
+
+    public abstract class Event : Message, INotification
+    {
+        public DateTime TimeStamp { get; private set; }
+
+        protected Event()
+        {
+            TimeStamp = DateTime.Now;
         }
     }
 }

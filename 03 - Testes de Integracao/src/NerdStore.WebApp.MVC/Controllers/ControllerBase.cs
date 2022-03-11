@@ -16,7 +16,7 @@ namespace NerdStore.WebApp.MVC.Controllers
 
         protected Guid ClienteId;
 
-        protected ControllerBase(INotificationHandler<DomainNotificarion> notifications,
+        protected ControllerBase(INotificationHandler<DomainNotification> notifications,
                                  IMediator mediatorHandler, 
                                  IHttpContextAccessor httpContextAccessor)
         {
@@ -41,7 +41,7 @@ namespace NerdStore.WebApp.MVC.Controllers
 
         protected void NotificarErro(string codigo, string mensagem)
         {
-            _mediatorHandler.Publish(new DomainNotificarion(codigo, mensagem));
+            _mediatorHandler.Publish(new DomainNotification(codigo, mensagem));
         }
 
         protected new IActionResult Response(object result = null)

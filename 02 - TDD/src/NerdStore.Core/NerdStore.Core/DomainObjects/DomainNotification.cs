@@ -4,7 +4,7 @@ using System;
 
 namespace NerdStore.Core.DomainObjects
 {
-    public class DomainNotificarion : Message, INotification
+    public class DomainNotification : Message, INotification
     {
         public DateTime TimeStamp { get; private set; }
         public Guid DomainNotificationId { get; private set; }
@@ -15,7 +15,7 @@ namespace NerdStore.Core.DomainObjects
 
         public int Version { get; private set; }
 
-        public DomainNotificarion(string key, string value)
+        public DomainNotification(string key, string value)
         {
             TimeStamp = DateTime.Now;
             DomainNotificationId = Guid.NewGuid();

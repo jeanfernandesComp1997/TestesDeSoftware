@@ -62,7 +62,7 @@ namespace NerdStore.Vendas.Application.Commands
 
             foreach (var error in message.ValidationResult.Errors)
             {
-                await _mediator.Publish(new DomainNotificarion(message.MessageType, error.ErrorMessage), cancellationToken);
+                await _mediator.Publish(new DomainNotification(message.MessageType, error.ErrorMessage), cancellationToken);
             }
 
             return false;

@@ -29,7 +29,7 @@ namespace NerdStore.WebApp.MVC.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
 
-        public CarrinhoControllerApi(INotificationHandler<DomainNotificarion> notifications,
+        public CarrinhoControllerApi(INotificationHandler<DomainNotification> notifications,
                                   IProdutoAppService produtoAppService,
                                   IMediator mediatorHandler, 
                                   IPedidoQueries pedidoQueries,

@@ -1,5 +1,5 @@
 # Testes de Software
-## Explicação e práticas de testes de software com c#
+## Explicação e práticas de testes de software
 
 ### Testes de unidade
 
